@@ -9,8 +9,9 @@
 
   <meta property="og:title" content="12 Acres for Sale in Hocking County, Ohio">
   <meta property="og:description" content="Improved 12-acre property at 37359 Price Road in Logan, Ohio with driveway access, waterline tap, hydrants, shed, electric line crossing the property, and retreat potential.">
-  <meta property="og:image" content="https://webapp-host-tpm.github.io/price-rd/images/hero-property.jpg">
-  <meta property="og:url" content="https://webapp-host-tpm.github.io/price-rd/">
+  <meta property="og:image" content="https://hocking-land.github.io/price-rd/images/hero-property.jpg">
+  <meta property="og:url" content="https://hocking-land.github.io/price-rd/">
+  <link rel="canonical" href="https://hocking-land.github.io/price-rd/">
   <meta property="og:type" content="website">
 
   <style>
@@ -743,6 +744,61 @@
       gap: 12px;
     }
 
+    .contact-email {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 4px 12px;
+      align-items: center;
+      padding: 14px 16px;
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      background: rgba(255, 255, 255, 0.07);
+    }
+
+    .contact-email-label {
+      grid-column: 1 / -1;
+      color: var(--muted);
+      font-size: 0.78rem;
+      font-weight: 800;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+
+    .contact-email-address {
+      color: var(--text);
+      font-weight: 800;
+      text-decoration: underline;
+      text-decoration-color: rgba(255, 255, 255, 0.3);
+      text-underline-offset: 3px;
+      overflow-wrap: anywhere;
+    }
+
+    .contact-email-address:hover {
+      color: var(--accent);
+    }
+
+    .copy-email-button {
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      padding: 7px 12px;
+      background: rgba(255, 255, 255, 0.08);
+      color: var(--text);
+      font-size: 0.82rem;
+      font-weight: 800;
+      cursor: pointer;
+      transition: background 0.2s ease, transform 0.2s ease;
+    }
+
+    .copy-email-button:hover {
+      background: rgba(255, 255, 255, 0.15);
+      transform: translateY(-1px);
+    }
+
+    .copy-email-button:focus-visible {
+      outline: 3px solid var(--accent);
+      outline-offset: 3px;
+    }
+
     footer {
       padding: 34px 0;
       color: var(--muted);
@@ -968,6 +1024,15 @@
       .copy-card,
       .hero-card {
         padding: 22px;
+      }
+
+      .contact-email {
+        grid-template-columns: 1fr;
+      }
+
+      .copy-email-button {
+        justify-self: start;
+        margin-top: 6px;
       }
 
       .cta-row .button {
@@ -1444,8 +1509,29 @@
           </div>
 
           <div class="contact-actions">
-            <a class="button button-primary" href="mailto:adam.rndr@gmail.com?subject=Price%20Road%2012%20Acre%20Property">
-              Email About the Property
+            <div class="contact-email">
+              <span class="contact-email-label">Email</span>
+
+              <a
+                class="contact-email-address"
+                href="mailto:adam.rndr@gmail.com?subject=Price%20Road%2012%20Acre%20Property">
+                adam.rndr@gmail.com
+              </a>
+
+              <button
+                class="copy-email-button"
+                type="button"
+                id="copyEmailButton"
+                data-email="adam.rndr@gmail.com"
+                aria-label="Copy adam.rndr@gmail.com to the clipboard">
+                Copy Email
+              </button>
+            </div>
+
+            <a
+              class="button button-primary"
+              href="mailto:adam.rndr@gmail.com?subject=Price%20Road%2012%20Acre%20Property">
+              Send an Email
             </a>
 
             <a class="button button-secondary" href="tel:740-233-1118">
@@ -1499,6 +1585,43 @@
 
   <script>
     document.getElementById("year").textContent = new Date().getFullYear();
+
+    const copyEmailButton = document.getElementById("copyEmailButton");
+
+    copyEmailButton?.addEventListener("click", async () => {
+      const email = copyEmailButton.dataset.email;
+      const originalText = "Copy Email";
+
+      try {
+        await navigator.clipboard.writeText(email);
+        copyEmailButton.textContent = "Copied!";
+        copyEmailButton.setAttribute("aria-label", `${email} copied to the clipboard`);
+      } catch (error) {
+        // Fallback for browsers that block the Clipboard API.
+        const temporaryInput = document.createElement("textarea");
+        temporaryInput.value = email;
+        temporaryInput.setAttribute("readonly", "");
+        temporaryInput.style.position = "fixed";
+        temporaryInput.style.opacity = "0";
+        document.body.appendChild(temporaryInput);
+        temporaryInput.select();
+
+        try {
+          document.execCommand("copy");
+          copyEmailButton.textContent = "Copied!";
+          copyEmailButton.setAttribute("aria-label", `${email} copied to the clipboard`);
+        } catch (fallbackError) {
+          copyEmailButton.textContent = "Select Email Above";
+        } finally {
+          temporaryInput.remove();
+        }
+      }
+
+      window.setTimeout(() => {
+        copyEmailButton.textContent = originalText;
+        copyEmailButton.setAttribute("aria-label", `Copy ${email} to the clipboard`);
+      }, 2500);
+    });
 
     const lightbox = document.getElementById("lightbox");
     const lightboxImage = document.getElementById("lightboxImage");
